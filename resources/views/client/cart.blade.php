@@ -1,6 +1,6 @@
 @extends('layouts.appClient')
 @section('contenu')
-    <div class="hero-wrap hero-bread" style="background-image: url('front/images/bg_1.jpg');">
+    <div class="hero-wrap hero-bread" style="background-image: url('/front/images/bg_1.jpg');">
         <div class="container">
             <div class="row no-gutters slider-text align-items-center justify-content-center">
                 <div class="col-md-9 ftco-animate text-center">
@@ -11,6 +11,7 @@
         </div>
     </div>
     <section class="ftco-section ftco-cart">
+        @if(Session::has('panier'))
         <div class="container">
             <div class="row">
                 <div class="col-md-12 ftco-animate">
@@ -20,135 +21,107 @@
                             <tr class="text-center">
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
-                                <th>Product name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
+                                <th>Libelle Produit</th>
+                                <th>Prix</th>
+                                <th>Quantité</th>
                                 <th>Total</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr class="text-center">
-                                <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
+                                <tbody>
+                                @foreach($produits as $produit)
+                                    <tr class="text-center">
+                                        <td class="product-remove"><a href="{{ route('paniers.show', $produit['id']) }}"><span class="ion-ios-close"></span></a></td>
 
-                                <td class="image-prod">
-                                    <div class="img" style="background-image:url(front/images/product-3.jpg);"></div>
-                                </td>
+                                        <td class="image-prod">
+                                            <div class="img"
+                                                 style="background-image:url('/storage/produits_image/{{$produit['image']}}');"></div>
+                                        </td>
 
-                                <td class="product-name">
-                                    <h3>Bell Pepper</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries</p>
-                                </td>
+                                        <td class="product-name">
+                                            <h3>{{$produit['libelle_produit']}}</h3>
+                                        </td>
 
-                                <td class="price">$4.90</td>
-                                <form action="">
-                                    <td class="quantity">
-                                        <div class="input-group mb-3">
-                                            <input type="number" name="quantity"
-                                                   class="quantity form-control input-number" value="1" min="1"
-                                                   max="100">
-                                        </div>
-                                </form>
-
-
-                                </td>
-
-                                <td class="total">$4.90</td>
-                            </tr><!-- END TR-->
-
-                            <tr class="text-center">
-                                <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-
-                                <td class="image-prod">
-                                    <div class="img" style="background-image:url(front/images/product-4.jpg);"></div>
-                                </td>
-
-                                <td class="product-name">
-                                    <h3>Bell Pepper</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries</p>
-                                </td>
-
-                                <td class="price">$15.70</td>
-
-                                <td class="quantity">
-                                    <div class="input-group mb-3">
-                                        <input type="text" name="quantity" class="quantity form-control input-number"
-                                               value="1" min="1" max="100">
-                                    </div>
-                                </td>
-
-                                <td class="total">$15.70</td>
-                            </tr><!-- END TR-->
-                            </tbody>
+                                        <td class="price">CFA: {{$produit['prix']}}</td>
+                                        <form method="post" action="{{ route('paniers.update', $produit['id']) }}" >
+                                            @method('PUT')
+                                            @csrf
+                                            <td class="quantity">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" name="quantity"
+                                                           class="quantity form-control input-number"
+                                                           value="{{$produit['qty']}}" min="1">
+                                                </div>
+                                                <input type="submit" value="Modifier" class="btn btn-success">
+                                            </td>
+                                        </form>
+                                        <td class="total">CFA: {{$produit['prix'] * $produit['qty']}}</td>
+                                    </tr><!-- END TR-->
+                                </tbody>
+                                @endforeach
                         </table>
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-start">
+                <div class="col-lg-12 cart-wrap ftco-animate">
+                    <div class="cart-total mb-3">
+                        <h3>Activer service de livraison</h3>
+                        <p>Faites-vous livrer par nos meilleurs livreurs</p>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="active" value="" class="mr-2"> Activer livraison</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row justify-content-end">
-                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                <div class="col-lg-8 mt-5 cart-wrap ftco-animate" id="shipping-info" style="display: none;">
                     <div class="cart-total mb-3">
-                        <h3>Coupon Code</h3>
-                        <p>Enter your coupon code if you have one</p>
-                        <form action="#" class="info">
-                            <div class="form-group">
-                                <label for="">Coupon code</label>
-                                <input type="text" class="form-control text-left px-3" placeholder="">
-                            </div>
-                        </form>
+                        <h3>Estimation des frais de transports</h3>
+                        <p>Entrez votre destination pour obtenir une estimation de l'expédition</p>
+                        <div id="map" style="height: 400px; "></div>
                     </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Apply Coupon</a></p>
+                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Estimation</a></p>
                 </div>
                 <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
                     <div class="cart-total mb-3">
-                        <h3>Estimate shipping and tax</h3>
-                        <p>Enter your destination to get a shipping estimate</p>
-                        <form action="#" class="info">
-                            <div class="form-group">
-                                <label for="">Country</label>
-                                <input type="text" class="form-control text-left px-3" placeholder="">
-                            </div>
-                            <div class="form-group">
-                                <label for="country">State/Province</label>
-                                <input type="text" class="form-control text-left px-3" placeholder="">
-                            </div>
-                            <div class="form-group">
-                                <label for="country">Zip/Postal Code</label>
-                                <input type="text" class="form-control text-left px-3" placeholder="">
-                            </div>
-                        </form>
-                    </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Estimate</a></p>
-                </div>
-                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-                    <div class="cart-total mb-3">
-                        <h3>Cart Totals</h3>
+                        <h3>Totaux du panier</h3>
                         <p class="d-flex">
-                            <span>Subtotal</span>
+                            <span>Total Achat</span>
                             <span>$20.60</span>
                         </p>
                         <p class="d-flex">
-                            <span>Delivery</span>
+                            <span>Livraison</span>
                             <span>$0.00</span>
                         </p>
                         <p class="d-flex">
-                            <span>Discount</span>
+                            <span>Rabais</span>
                             <span>$3.00</span>
                         </p>
                         <hr>
                         <p class="d-flex total-price">
-                            <span>Total</span>
+                            <span>TOTAL</span>
                             <span>$17.60</span>
                         </p>
                     </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Passer à la caisse</a></p>
                 </div>
             </div>
         </div>
+        @else
+            <h1 class="mb-0 bread bnt btn-info text-center">Votre panier est vide</h1>
+        @endif
     </section>
 
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
+        /*
         $(document).ready(function () {
 
             var quantitiy = 0;
@@ -183,6 +156,27 @@
             });
 
         });
+**/
+            const checkbox = document.getElementById('active');
+            const shippingInfo = document.getElementById('shipping-info');
+
+            checkbox.addEventListener('change', function() {
+            if (this.checked) {
+            shippingInfo.style.display = 'block';  // Afficher le code de livraison
+        } else {
+            shippingInfo.style.display = 'none';   // Masquer le code de livraison
+        }
+        });
+
+
+
+            ///carte
+        var map = L.map('map').setView([14.7167, -17.4677], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
     </script>
 @endsection
 

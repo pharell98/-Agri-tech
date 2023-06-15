@@ -35,9 +35,9 @@
                                     <th scope="col">{{ $slider->description_2 }}</th>
                                     <th scope="col">
                                         @if ($slider->status == 1)
-                                            <label class="btn btn-info">En vente...</label>
+                                            <label class="btn btn-info">Active</label>
                                         @else
-                                            <label class="btn btn-warning">En attente...</label>
+                                            <label class="btn btn-warning">Desactiver</label>
                                         @endif
                                     </th>
                                     <th scope="col">
@@ -46,11 +46,11 @@
                                         <a href="{{ route('sliders.destroy',[$slider->id]) }}'" id="delete" class="btn btn-outline-danger">Suprimer</a>
                                         @if ($slider->status == 1)
                                             <button class="btn btn-outline-warning"
-                                                    onclick=" window.location='{{ route('sliders.desactiver',[$slider->id]) }}'">Retirer du vente
+                                                    onclick=" window.location='{{ route('sliders.desactiver',[$slider->id]) }}'">Désactiver
                                             </button>
                                         @else
                                             <button class="btn btn-outline-success"
-                                                    onclick=" window.location='{{ route('sliders.activer',[$slider->id]) }}'">Valider Commande
+                                                    onclick=" window.location='{{ route('sliders.activer',[$slider->id]) }}'"> Activer
                                             </button>
                                         @endif
                                     </th>

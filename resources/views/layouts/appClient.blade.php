@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="{{ asset('front/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('front/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body class="goto-here">
 <div class="py-1 bg-primary">
@@ -55,7 +59,7 @@
 </div>
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
-        <a class="navbar-brand" href="index.html">Vegefoods</a>
+        <a class="navbar-brand" href="{{ url('/') }}">Agri-Tech</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
@@ -63,11 +67,11 @@
 
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item active"><a href="shop.html" class="nav-link">shop</a></li>
+                <li class="nav-item active"><a href="{{ url('/') }}" class="nav-link">Home</a></li>
+                <li class="nav-item active"><a href="{{ route('shops.index')}}" class="nav-link">shop</a></li>
 
-                <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span
-                            class="icon-shopping_cart"></span>[0]</a></li>
+                <li class="nav-item cta cta-colored"><a href="{{ route('paniers.index')}}" class="nav-link"><span
+                            class="icon-shopping_cart"></span>[{{ Session::has('panier')?Session::get('panier')->totalQty:0}}]</a></li>
                 <li class="nav-item active"><a href="{{URL::to('/client_login')}}" class="nav-link">Login</a></li>
             </ul>
         </div>
@@ -208,6 +212,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="{{ asset('front/js/google-map.js') }}"></script>
 <script src="{{ asset('front/js/main.js') }}"></script>
+
 
 @yield('script')
 
