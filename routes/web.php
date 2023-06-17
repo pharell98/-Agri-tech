@@ -31,6 +31,7 @@ Route::resource('sliders',SlidersController::class);
 
 /******************** les Routes pour le client *********************/
 Route::get('/', [HomePageController::class, 'home']);
+Route::get('/client',[ClientController::class,'dashboard']);
 Route::get('/addPanier/{id}',[ShopController::class, 'addPanier'])->name('shop.addPanier');
 Route::resource('shops',ShopController::class);
 Route::resource('paniers',PanierController::class);
