@@ -103,23 +103,19 @@
                     <div class="row mt-5 pt-3">
                         <div class="col-md-12 d-flex mb-5">
                             <div class="cart-detail cart-total p-3 p-md-4">
-                                <h3 class="billing-heading mb-4">Cart Total</h3>
+                                <h3 class="billing-heading mb-4">Total du panier</h3>
                                 <p class="d-flex">
-                                    <span>Subtotal</span>
-                                    <span>$20.60</span>
+                                    <span>Total</span>
+                                    <span>{{ Session::get('panier')->totalPrice }}</span>
                                 </p>
                                 <p class="d-flex">
-                                    <span>Delivery</span>
-                                    <span>$0.00</span>
-                                </p>
-                                <p class="d-flex">
-                                    <span>Discount</span>
-                                    <span>$3.00</span>
+                                    <span>Livraison</span>
+                                    <span>{{ Session::has('prixLivraison') ? Session::get('prixLivraison') : 0}}</span>
                                 </p>
                                 <hr>
                                 <p class="d-flex total-price">
-                                    <span>Total</span>
-                                    <span>$17.60</span>
+                                    <span>TOTAL</span>
+                                    <span>{{ Session::get('total') }}</span>
                                 </p>
                             </div>
                         </div>

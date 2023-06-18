@@ -35,7 +35,7 @@ Route::get('/client',[ClientController::class,'dashboard']);
 Route::get('/addPanier/{id}',[ShopController::class, 'addPanier'])->name('shop.addPanier');
 Route::resource('shops',ShopController::class);
 Route::resource('paniers',PanierController::class);
-Route::get('/checkout', [HomePageController::class, 'checkout']);
+Route::post('/checkout', [PanierController::class, 'paiement'])->name('paniers.paiement');
 
 
 

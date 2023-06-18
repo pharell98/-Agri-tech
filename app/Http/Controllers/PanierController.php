@@ -44,5 +44,13 @@ class PanierController extends Controller
         return redirect('paniers');
     }
 
+    public function paiement(Request $request){
+        $prixLivraison = $request->input('prix');
+        $prixAchat = $request->input('prixAchat');
+        $total = $prixLivraison +  $prixAchat;
+        Session::put('prixLivraison', $prixLivraison);
+        Session::put('total', $total);
 
+        return view('client.checkout',['prixLivraison'=>$prixLivraison,'total'=>$total]);
+    }
 }

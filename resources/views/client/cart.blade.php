@@ -87,29 +87,29 @@
                     </div>
                 </div>
                 <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-                    <div class="cart-total mb-3">
-                        <h3>Totaux du panier</h3>
-                        <p class="d-flex">
-                            <span>Total Achat</span>
-                            <span id="total-achat">{{ intval(Session::get('panier')->totalPrice) }}</span>
-                        </p>
+                    <form action="{{route('paniers.paiement')}}" method="post">
+                        @csrf
+                        <div class="cart-total mb-3">
+                            <h3>Totaux du panier</h3>
+                            <p class="d-flex">
+                                <span>Total Achat</span>
+                                <input id="prixAchat" type="number" readonly name="prixAchat" value="{{ intval(Session::get('panier')->totalPrice) }}" >
 
-                        <p class="d-flex">
-                            <span>Livraison</span>
-                            <span id="prix">{{ Session::has('prix') ? old('prix') : 0 }}</span>
+                            </p>
 
-                        </p>
-                        <p class="d-flex">
-                            <span>Rabais</span>
-                            <span>$3.00</span>
-                        </p>
-                        <hr>
-                        <p class="d-flex total-price">
-                            <span>TOTAL</span>
-                                <span id="total-prix">{{ Session::has('total-prix') ? old('total-prix') : intval(Session::get('panier')->totalPrice) }}</span>
-                        </p>
-                    </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Passer à la caisse</a></p>
+                            <p class="d-flex">
+                                <span>Livraison</span>
+                                <input id="prix" readonly type="number"  name="prix" value="0">
+                            </p>
+                            <hr>
+                            <p class="d-flex total-price">
+                                <span>TOTAL</span>
+                               <span id="totalPrix"></span>
+                            </p>
+                        </div>
+                        <p>
+                            <button type="submit" class="btn btn-success">Passer à la caisse</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -193,19 +193,16 @@
 
             $.ajax(settings_d_d).done(function(response) {
                 console.log(response);
-                var totalAchat = document.getElementById('total-achat');
-                var prixAchats = parseInt(totalAchat.textContent);
                 var distance = response.routes[0].distance / 1000
                 var duree = response.routes[0].duration /40
                 var prix = ((distance * 2 + duree * 0.1)*200).toFixed(0);
                 var price = adjustPrice(prix);
-                var totalPrix = prixAchats + price
 
                 $("#dure").val(duree.toFixed(0));
                 $("#distance").val(distance.toFixed(1));
-                $("#prix").text(parseInt(price));
-                $("#total-prix").text(parseInt(totalPrix));
-                console.log(prixAchats);
+                $("#prix").val(parseInt(price));
+                $("#totalPrix").text(parseInt($("#prixAchat").val()) + parseInt(price));
+
             });
 
             function adjustPrice(price) {
@@ -221,7 +218,28 @@
             }
         });
 
-            const checkbox = document.getElementById('active');
+        // Sélection des éléments HTML
+        const prixAchatInput = document.getElementById('prixAchat');
+        const prixInput = document.getElementById('prix');
+        const totalPrixSpan = document.getElementById('totalPrix');
+
+        // Fonction de calcul du prix total
+        function calculerPrixTotal() {
+            const prixAchat = parseFloat(prixAchatInput.value);
+            const prixLivraison = parseFloat(prixInput.value);
+            const total = prixAchat + prixLivraison;
+            totalPrixSpan.textContent = total.toFixed(2); // Met à jour le texte du span
+        }
+
+        // Écouteurs d'événements pour les changements des champs prix et prixAchat
+        prixAchatInput.addEventListener('change', calculerPrixTotal);
+        prixInput.addEventListener('change', calculerPrixTotal);
+
+        // Appel initial pour calculer le prix total au chargement de la page
+        calculerPrixTotal();
+
+
+        const checkbox = document.getElementById('active');
             const shippingInfo = document.getElementById('shipping-info');
 
             checkbox.addEventListener('change', function() {
@@ -231,7 +249,6 @@
             shippingInfo.style.display = 'none';   // Masquer le code de livraison
         }
         });
-
 
     </script>
 @endsection

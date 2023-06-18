@@ -15,7 +15,5 @@ class HomePageController extends Controller
         $produits = Produit::where('status',1)->get();
         return view('client.home',['sliders'=>$sliders,'produits'=>$produits]);
     }
-    public function checkout(){
-        return view('client.checkout');
-    }
+
 }
