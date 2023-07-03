@@ -2,67 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function dashboard()
     {
-        return view('admin.formulaires.dashboard');
+        $commandes = Commande::simplePaginate(5);
+        $totalProduitsVendu = 0;
+
+        $commandes->transform(function ($commande, $key) {
+            $commande->panier = unserialize($commande->panier);
+            return $commande;
+        });
+        foreach ($commandes as $order) {
+            foreach ($order->panier->items as $item) {
+                $totalProduitsVendu = $totalProduitsVendu + $item['qty'];
+            }
+        }
+
+        return view('admin.formulaires.dashboard', ['commandes' => $commandes,'totalProduitsVendu' => $totalProduitsVendu]);
     }
-
-
-
-    /***************************************************************
-     **************************** METHODE AJOUT ********************
-     ***************************************************************/
-
-    public function ajoutAdmin()
-    {
-        return view('admin.formulaires.ajoutAdmin');
-    }
-
-    public function ajoutProduit()
-    {
-        return view('admin.formulaires.ajoutProduit');
-    }
-
-    public function ajoutCategorie()
-    {
-        return view('admin.formulaires.ajoutCategorie');
-    }
-
-    public function ajoutFournisseur()
-    {
-        return view('admin.formulaires.ajoutFournisseur');
-    }
-
-    public function ajoutSlider()
-    {
-        return view('admin.formulaires.ajoutSlider');
-    }
-
-    /***************************************************************
-     **************************** METHODE Affichage ********************
-     ***************************************************************/
-    public function listeProduit()
-    {
-        return view('admin.pages.listeProduit');
-    }
-    public function listeCategorie()
-    {
-        return view('admin.pages.listeCategorie');
-    }
-    public function listeFournisseur()
-    {
-        return view('admin.pages.listeFournisseur');
-    }
-    public function listeSlider()
-    {
-        return view('admin.pages.listeSlider');
-    }
-
-
 
 
 }

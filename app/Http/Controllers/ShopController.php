@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Session;
 
 class ShopController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index(){
         $produits = Produit::where('status',1)->get();
         $categories = Categorie::get();

@@ -69,7 +69,36 @@
 
                 <li class="nav-item cta cta-colored"><a href="{{ route('paniers.index')}}" class="nav-link"><span
                             class="icon-shopping_cart"></span>[{{ Session::has('panier')?Session::get('panier')->totalQty:0}}]</a></li>
-                <li class="nav-item active"><a href="{{URL::to('/client_login')}}" class="nav-link">Login</a></li>
+                @guest()
+                    <li class="nav-item active"><a href="{{route('login')}}" class="nav-link">Se connecter</a></li>
+                    <li class="nav-item active"><a href="{{route('register')}}" class="nav-link">S'inscrire</a></li>
+                @else
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <img src="https://cdn-icons-png.flaticon.com/512/1246/1246314.png?w=740&t=st=1680149247~exp=1680149847~hmac=8ff84a45878bf3bf27eade4b9f4c69d983555645a8a94865e66d34a53048a969"
+                                 alt="" width="20" height="20" class="rounded-circle me-2">
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('client.dashboard') }}"
+                               style="color:  rgba(1, 4, 136, 0.9);">
+                                Mon Compte
+                            </a>
+                            <a class="dropdown-item" style="color:  rgba(1, 4, 136, 0.9);" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                Deconnexion
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
+
             </ul>
         </div>
     </div>

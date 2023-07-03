@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class HomePageController extends Controller
 {
     //
+
     public function home()
     {
         $sliders = Slider::where('status',1)->get();

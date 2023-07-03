@@ -10,11 +10,11 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="{{asset('login/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('loginclient/css/style.css')}}">
 
 </head>
 
-<body class="img js-fullheight" style="background-image: url(/login/images/img3.jpg);">
+<body class="img js-fullheight" style="background-image: url(/loginclient/images/img3.jpg);">
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center">
@@ -25,17 +25,17 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4 btn btn-outline-secondary">
                 <div class="login-wrap p-0 ">
-                    @yield('login')
+                    @yield('loginclient')
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<script src="{{asset('login/js/jquery.min.js')}}"></script>
-<script src="{{asset('login/js/popper.js')}}"></script>
-<script src="{{asset('login/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('login/js/main.js')}}"></script>
+<script src="{{asset('loginclient/js/jquery.min.js')}}"></script>
+<script src="{{asset('loginclient/js/popper.js')}}"></script>
+<script src="{{asset('loginclient/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('loginclient/js/main.js')}}"></script>
 
 </body>
 

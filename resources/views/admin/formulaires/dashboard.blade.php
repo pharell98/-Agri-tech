@@ -10,17 +10,17 @@
                 <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
                     <i class="fa fa-chart-line fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Revenur Moy. Vente/jour</p>
-                        <h6 class="mb-0">CFA: 1234</h6>
+                        <p class="mb-2">Taux de satisfaction client :</p>
+                        <h6 class="mb-0">95 %</h6>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                    <i class="fa fa-users fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Revenue Total Vente </p>
-                        <h6 class="mb-0">CFA: 1234</h6>
+                        <p class="mb-2">Nombre total de clients: </p>
+                        <h6 class="mb-0">1234</h6>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                     <i class="fa fa-chart-area fa-3x text-primary"></i>
                     <div class="ms-3">
                         <p class="mb-2">Nbre. Moy. Produit/jour</p>
-                        <h6 class="mb-0">1234 Pr</h6>
+                        <h6 class="mb-0">1234 Produits</h6>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <i class="fa fa-chart-pie fa-3x text-primary"></i>
                     <div class="ms-3">
                         <p class="mb-2">NBR. Total produit vendu</p>
-                        <h6 class="mb-0">1234 Pr</h6>
+                        <h6 class="mb-0">{{ $totalProduitsVendu }} Produits</h6>
                     </div>
                 </div>
             </div>
@@ -53,9 +53,9 @@
             <div class="col-sm-12 col-xl-6">
                 <div class="bg-secondary text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Statistique des ventes/jour</h6>
+                        <h6 class="mb-0">Statistique des ventes/Produit</h6>
                     </div>
-                    <canvas id="line-chart"></canvas>
+                    <canvas id="bar-chart"></canvas>
                 </div>
             </div>
             <div class="col-sm-12 col-xl-6">
@@ -132,32 +132,51 @@
         <div class="bg-secondary text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h6 class="mb-0">Commande</h6>
+                @if(Session::has('error'))
+                    {{Session::get('error')}}
+                @endif
             </div>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
                     <tr class="text-white">
-                        <th scope="col">Date</th>
-                        <th scope="col">Invoice</th>
+                        <th scope="col">#id</th>
                         <th scope="col">Client</th>
+                        <th scope="col">Adresse</th>
+                        <th scope="col">Panier</th>
+                        <th scope="col">Adres livraison</th>
+                        <th scope="col">Prix livraison</th>
                         <th scope="col">Montant</th>
-                        <th scope="col">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
+                    @foreach($commandes as $commande)
+                        <tr>
+                            <td>{{$commande->id}}</td>
+                            <td>{{$commande->nom}}</td>
+                            <td>{{$commande->adresse}}</td>
+                            <td>
+                                @foreach($commande->panier->items as $item)
+                                    {{$item['libelle_produit'].' , '}}
+                                @endforeach
+
+                            </td>
+                            <td>{{$commande->lieulivraison}}</td>
+                            <td>{{$commande->prixlivraison}}</td>
+                            <td>{{$commande->montant}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick=" window.location='{{ route('pdf',[$commande->id]) }} '">
+                                    PDF
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+        {{ $commandes->onEachSide(5)->links() }}
     </div>
     <!-- Recent Sales End -->
 @endsection

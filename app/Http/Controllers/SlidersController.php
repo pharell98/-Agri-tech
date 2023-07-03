@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Storage;
 
 class SlidersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     private function image($image)
     {
         /**

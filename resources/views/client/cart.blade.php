@@ -12,25 +12,27 @@
     </div>
     <section class="ftco-section ftco-cart">
         @if(Session::has('panier'))
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 ftco-animate">
-                    <div class="cart-list">
-                        <table class="table">
-                            <thead class="thead-primary">
-                            <tr class="text-center">
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                                <th>Libelle Produit</th>
-                                <th>Prix</th>
-                                <th>Quantité</th>
-                                <th>Total</th>
-                            </tr>
-                            </thead>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 ftco-animate">
+                        <div class="cart-list">
+                            <table class="table">
+                                <thead class="thead-primary">
+                                <tr class="text-center">
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>Libelle Produit</th>
+                                    <th>Prix</th>
+                                    <th>Quantité</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
                                 <tbody>
                                 @foreach($produits as $produit)
                                     <tr class="text-center">
-                                        <td class="product-remove"><a href="{{ route('paniers.show', $produit['id']) }}"><span class="ion-ios-close"></span></a></td>
+                                        <td class="product-remove"><a
+                                                href="{{ route('paniers.show', $produit['id']) }}"><span
+                                                    class="ion-ios-close"></span></a></td>
 
                                         <td class="image-prod">
                                             <div class="img"
@@ -42,7 +44,7 @@
                                         </td>
 
                                         <td class="price">CFA: {{$produit['prix']}}</td>
-                                        <form method="post" action="{{ route('paniers.update', $produit['id']) }}" >
+                                        <form method="post" action="{{ route('paniers.update', $produit['id']) }}">
                                             @method('PUT')
                                             @csrf
                                             <td class="quantity">
@@ -58,63 +60,70 @@
                                     </tr><!-- END TR-->
                                 </tbody>
                                 @endforeach
-                        </table>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row justify-content-start">
-                <div class="col-lg-12 cart-wrap ftco-animate">
-                    <div class="cart-total mb-3">
-                        <h3>Activer service de livraison</h3>
-                        <p>Faites-vous livrer par nos meilleurs livreurs</p>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="active" value="" class="mr-2"> Activer livraison</label>
+                <div class="row justify-content-start">
+                    <div class="col-lg-12 cart-wrap ftco-animate">
+                        <div class="cart-total mb-3">
+                            <h3>Activer service de livraison</h3>
+                            <p>Faites-vous livrer par nos meilleurs livreurs</p>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="active" value="" class="mr-2"> Activer
+                                            livraison</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row justify-content-end">
-                <div class="col-lg-8 mt-5 cart-wrap ftco-animate" id="shipping-info" style="display: none;">
-                    <div class="cart-total mb-3">
-                        <h3>Estimation des frais de transports</h3>
-                        <p>Entrez votre destination pour obtenir une estimation de l'expédition</p>
-                        <p>Destination : <i class="text-info"  id="adresse_arrivee">{{ old('adresse_arrivee') }}</i></p>
-                        <div id="map" style="width: 700px; height: 550px;"></div>
+                <div class="row justify-content-end">
+                    <div class="col-lg-8 mt-5 cart-wrap ftco-animate" id="shipping-info" style="display: none;">
+                        <div class="cart-total mb-3">
+                            <h3>Estimation des frais de transports</h3>
+                            <p>Entrez votre destination pour obtenir une estimation de l'expédition</p>
+                            <p>Destination : <i class="text-info" id="adresse_arrivee">{{ old('adresse_arrivee')  }}</i>
+                            </p>
+                            <div id="map" style="width: 700px; height: 550px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                        <form action="{{route('paniers.paiement')}}" method="get">
+                            @csrf
+                            <div class="cart-total mb-3">
+                                <h3>Totaux du panier</h3>
+                                <p class="d-flex">
+                                    <span>Total Achat</span>
+                                    <input id="prixAchat" type="number" readonly name="prixAchat"
+                                           value="{{ intval(Session::get('panier')->totalPrice) }}">
+                                </p>
+
+                                <p class="d-flex">
+                                    <span>Livraison</span>
+                                    <input type="hidden"  id="lieuLivraison" name="lieuLivraison" >
+                                    <input id="prix" readonly type="number" name="prix" value="0">
+                                </p>
+                                <hr>
+                                <p class="d-flex total-price">
+                                    <span>TOTAL</span>
+                                    <span id="totalPrix"></span>
+                                </p>
+                            </div>
+                            <p>
+                                <button type="submit" class="btn btn-success">Passer à la caisse</button>
+                        </form>
                     </div>
                 </div>
-                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-                    <form action="{{route('paniers.paiement')}}" method="post">
-                        @csrf
-                        <div class="cart-total mb-3">
-                            <h3>Totaux du panier</h3>
-                            <p class="d-flex">
-                                <span>Total Achat</span>
-                                <input id="prixAchat" type="number" readonly name="prixAchat" value="{{ intval(Session::get('panier')->totalPrice) }}" >
-
-                            </p>
-
-                            <p class="d-flex">
-                                <span>Livraison</span>
-                                <input id="prix" readonly type="number"  name="prix" value="0">
-                            </p>
-                            <hr>
-                            <p class="d-flex total-price">
-                                <span>TOTAL</span>
-                               <span id="totalPrix"></span>
-                            </p>
-                        </div>
-                        <p>
-                            <button type="submit" class="btn btn-success">Passer à la caisse</button>
-                    </form>
-                </div>
             </div>
-        </div>
         @else
-            <h1 class="mb-0 bread bnt btn-info text-center">Votre panier est vide</h1>
+            @if(Session::has('success'))
+                <h1 class="mb-0 bread bnt btn-info text-center">{{ Session::get('success') }}</h1>
+            @else
+                <h1 class="mb-0 bread bnt btn-info text-center">Votre panier est vide</h1>
+            @endif
         @endif
     </section>
 @endsection
@@ -137,15 +146,15 @@
             tooltipAnchor: [16, -28],
             shadowSize: [41, 41]
         });
-        var markerDepart = L.marker([14.692202275702636, -17.452591757354696], { draggable: true }).addTo(map);
-        var markerArrivee = L.marker([0, 0], { draggable: true }).addTo(map);
+        var markerDepart = L.marker([14.692202275702636, -17.452591757354696], {draggable: true}).addTo(map);
+        var markerArrivee = L.marker([0, 0], {draggable: true}).addTo(map);
 
         // Ajouter un événement de dragend pour les marqueurs de départ et d'arrivée
         markerDepart.setIcon(greenIcon);
         markerArrivee.setIcon(greenIcon);
 
         // Ajouter un événement de clic à la carte pour sélectionner l'adresse d'arrivée
-        map.on('contextmenu', function(e) {
+        map.on('contextmenu', function (e) {
             // Récupérer la latitude et la longitude du clic
             var lat = e.latlng.lat;
             var lng = e.latlng.lng;
@@ -177,12 +186,13 @@
                 result = result.slice(0, -1); // retire la virgule finale
 
                 $("#adresse_arrivee").text(result);
+                $("#lieuLivraison").val(result);
             });
 
             // Appeler la requête AJAX pour Distance Matrix API et afficher le résultat dans la console
             var d_lat = 14.692202275702636;
-            var d_lng =-17.452591757354696;
-            var url2 = "https://us1.locationiq.com/v1/directions/driving/"+d_lng+","+d_lat+";"+lng+","+lat+"?key=pk.771956bda85a36f299d7d6d5acb881ac&steps=true&alternatives=true&geometries=polyline&overview=full"
+            var d_lng = -17.452591757354696;
+            var url2 = "https://us1.locationiq.com/v1/directions/driving/" + d_lng + "," + d_lat + ";" + lng + "," + lat + "?key=pk.771956bda85a36f299d7d6d5acb881ac&steps=true&alternatives=true&geometries=polyline&overview=full"
             var settings_d_d = {
                 "async": true,
                 "crossDomain": true,
@@ -191,11 +201,11 @@
             }
             console.log(d_lat);
 
-            $.ajax(settings_d_d).done(function(response) {
+            $.ajax(settings_d_d).done(function (response) {
                 console.log(response);
                 var distance = response.routes[0].distance / 1000
-                var duree = response.routes[0].duration /40
-                var prix = ((distance * 2 + duree * 0.1)*200).toFixed(0);
+                var duree = response.routes[0].duration / 40
+                var prix = ((distance * 2 + duree * 0.1) * 150).toFixed(0);
                 var price = adjustPrice(prix);
 
                 $("#dure").val(duree.toFixed(0));
@@ -209,11 +219,11 @@
                 if (price < 500) {
                     return 500;
                 } else if (price < 1900) {
-                    return Math.round(price/100)*100;
+                    return Math.round(price / 100) * 100;
                 } else if (price < 2000) {
                     return 1900;
                 } else {
-                    return Math.round(price/1000)*1000;
+                    return Math.round(price / 1000) * 1000;
                 }
             }
         });
@@ -240,14 +250,14 @@
 
 
         const checkbox = document.getElementById('active');
-            const shippingInfo = document.getElementById('shipping-info');
+        const shippingInfo = document.getElementById('shipping-info');
 
-            checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function () {
             if (this.checked) {
-            shippingInfo.style.display = 'block';  // Afficher le code de livraison
-        } else {
-            shippingInfo.style.display = 'none';   // Masquer le code de livraison
-        }
+                shippingInfo.style.display = 'block';  // Afficher le code de livraison
+            } else {
+                shippingInfo.style.display = 'none';   // Masquer le code de livraison
+            }
         });
 
     </script>
